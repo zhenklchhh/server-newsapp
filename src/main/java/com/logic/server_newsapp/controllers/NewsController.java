@@ -2,7 +2,6 @@ package com.logic.server_newsapp.controllers;
 
 
 import com.logic.server_newsapp.models.News;
-import com.logic.server_newsapp.services.CommentsService;
 import com.logic.server_newsapp.services.CommunityService;
 import com.logic.server_newsapp.services.NewsService;
 import lombok.RequiredArgsConstructor;
@@ -36,22 +35,47 @@ public class NewsController {
         return ResponseEntity.ok(newsService.getAllNews());
     }
 
+    @GetMapping("/date/new")
+    public ResponseEntity<List<News>> getAllNewsSortedByNew() {
+        log.info("Получен запрос на получение всех новостей");
+        return ResponseEntity.ok(newsService.getAllNewsSortedByNewDate());
+    }
+
+    @GetMapping("/date/old")
+    public ResponseEntity<List<News>> getAllNewsSortedByOld() {
+        log.info("Получен запрос на получение всех новостей");
+        return ResponseEntity.ok(newsService.getAllNewsSortedByOldDate());
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<News> getNewsById(@PathVariable Long id) {
         log.info("Получен запрос на получение новости с id: {}", id);
         return newsService.getNewsById(id);
     }
+
     @GetMapping("/{name}")
     public ResponseEntity<List<News>> getNewsByName(@PathVariable String name) {
         log.info("Получен запрос на получение новости по названию {}", name);
         return ResponseEntity.ok(newsService.getNewsByName(name));
     }
 
+    @GetMapping("/date/{name}/new")
+    public ResponseEntity<List<News>> getNewsByNewName(@PathVariable String name) {
+        log.info("Получен запрос на получение всех новостей");
+        return ResponseEntity.ok(newsService.getNewsByNewName(name));
+    }
+
+    @GetMapping("/date/{name}/old")
+    public ResponseEntity<List<News>> getNewsByOldName(@PathVariable String name) {
+        log.info("Получен запрос на получение всех новостей");
+        return ResponseEntity.ok(newsService.getNewsByOldName(name));
+    }
+
     @PostMapping
     public ResponseEntity<News> createNews(@RequestBody News news, @RequestBody String communityName) {
         log.info("Получен запрос на создание новой новости: {}", news.getTitle());
         news.setPublishDate(LocalDateTime.now());
-        news.setCommunity(communityService.getCommunityByName(communityName).get());
+        news.setCommunity(communityService.getCommunityByName(communityName).getBody());
         return new ResponseEntity<>(newsService.saveNews(news), HttpStatus.CREATED);
     }
 

@@ -5,6 +5,7 @@ import com.logic.server_newsapp.repositories.CommunityRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -37,9 +38,14 @@ public class CommunityService {
     }
 
     // Get Community by name
-    public Optional<Community> getCommunityByName(String name) {
+    public ResponseEntity<Community> getCommunityByName(String name) {
         log.info("Получение новости по name: {}", name);
-        return communityRepository.findByNameCommunity(name);
+        return communityRepository.findByNameCommunity(name).map(community -> {
+            return ResponseEntity.ok(community);
+        }).orElseGet(() -> {
+            log.warn("Новость с id: {} не найдена для удаления", name);
+            return ResponseEntity.notFound().build();
+        });;
     }
 
     // Delete Community by ID
