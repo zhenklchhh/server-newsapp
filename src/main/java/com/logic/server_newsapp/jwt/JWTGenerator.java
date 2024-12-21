@@ -21,7 +21,7 @@ public class JWTGenerator {
 
         JWTClaimsSet claimsSet = new JWTClaimsSet();
         claimsSet.setSubject(String.valueOf(userId));
-        claimsSet.setIssuer("http://localhost:8080/backend_news_war_exploded");
+        claimsSet.setIssuer("http://localhost:8080");
         claimsSet.setExpirationTime(new Date(new Date().getTime() + 60 * 60 * 1000));
         SignedJWT signedJWT = new SignedJWT(new JWSHeader(JWSAlgorithm.HS256), claimsSet);
 

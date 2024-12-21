@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -20,24 +22,30 @@ public class AuthController {
     @Autowired
     private UserService userService;
 
-    @PostMapping(consumes = "application/json", produces = "application/json")
-    public ResponseEntity<String> registration(@RequestBody User user) throws IOException, JOSEException {
+    @PostMapping(value = "/register", consumes = "application/json", produces = "application/json")
+    public ResponseEntity<Map<String, String>> registration(@RequestBody User user) throws IOException, JOSEException {
         user.setRole("USER");
         userService.saveUser(user);
         String token = JWTGenerator.signJWT(user.getId());
-        return ResponseEntity.ok(token);
+        Map<String, String> response = new HashMap<>();
+        response.put("jwt", token);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping(value = "/login", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<String> login(@RequestBody User user) throws IOException, JOSEException {
+    public ResponseEntity<Map<String, String>> login(@RequestBody User user) throws IOException, JOSEException {
         Optional<User> authUser = userService.getUserByLoginAndPassword(user.getLogin(), user.getPassword());
-        if(authUser.isPresent()) {
-            String token = JWTGenerator.signJWT(user.getId());
+        if (authUser.isPresent()) {
+            String token = JWTGenerator.signJWT(authUser.get().getId());
             log.info("Пользователь с username: {} успешно аутентифицирован", user.getLogin());
-            return ResponseEntity.ok(token);
+            Map<String, String> response = new HashMap<>();
+            response.put("jwt", token);
+            return ResponseEntity.ok(response);
         } else {
             log.warn("Пользователь с username: {} не прошел аутентификацию", user.getLogin());
-            return ResponseEntity.status(401).build();
+            Map<String, String> response = new HashMap<>();
+            response.put("error", "Invalid credentials");
+            return ResponseEntity.status(401).body(response);
         }
     }
 }
