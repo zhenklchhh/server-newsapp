@@ -1,0 +1,24 @@
+### Register user
+POST /registration HTTP/1.1
+Host: localhost:8080
+Content-Type: application/json
+
+{
+  "login": "",
+  "password": "123123gG",
+  "email": "danik@example.com"
+}
+
+### Update user
+PUT /users/1 HTTP/1.1
+Host: localhost:8080
+Content-Type: application/json
+
+{
+  "password": "8521581",
+  "email": "john.filroch@example.com"
+}
+
+
+
+
