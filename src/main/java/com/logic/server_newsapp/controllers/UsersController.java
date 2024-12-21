@@ -24,6 +24,10 @@ public class UsersController {
         log.info("Получен запрос на получение всех пользователей");
         return ResponseEntity.ok(userService.getAllUsers());
     }
+    @GetMapping("/role")
+    public ResponseEntity<String> getUserRoleByLogin(@PathVariable String login) {
+        return userService.getUserRoleByLogin(login);
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable Long id) {
@@ -43,6 +47,26 @@ public class UsersController {
         log.info("Получен запрос на создание нового пользователя: {}", user.getLogin());
         user.setRole("USER");
         return new ResponseEntity<>(userService.saveUser(user), HttpStatus.CREATED);
+    }
+
+    @PutMapping("/updateUserRoleEditor")
+    public ResponseEntity<Void> updateUserRoleEditor(@RequestBody String login, @RequestBody String role) {
+        if (role == "ADMIN") {
+            return userService.updateUserRole(login, "EDITOR");
+        } else {
+            log.warn("User haven't permission to update user role");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+    }
+
+    @PutMapping("/updateUserRoleAdmin")
+    public ResponseEntity<Void> updateUserRoleAdmin(@RequestBody String login, @RequestBody String role) {
+        if (role == "ADMIN") {
+            return userService.updateUserRole(login, "ADMIN");
+        } else {
+            log.warn("User haven't permission to make user admin");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
     }
 
     @PutMapping("/{id}")

@@ -29,7 +29,7 @@ public class UserService {
         return userRepository.findById(id)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> {
-                    log.warn("Пользователь с id: {} не найдена", id);
+                    log.warn("Пользователь с id: {} не найден", id);
                     return ResponseEntity.notFound().build();
                 });
     }
@@ -37,7 +37,19 @@ public class UserService {
     public ResponseEntity<User> getUserByLogin(String login) {
         return userRepository.findByLogin(login)
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .orElseGet(() -> {
+                    log.warn("Пользователь с именем: {} не найден", login);
+                    return ResponseEntity.notFound().build();
+                });
+    }
+
+    public ResponseEntity<String> getUserRoleByLogin(String login) {
+        return userRepository.findByLogin(login)
+                .map(existingUser -> ResponseEntity.ok(existingUser.getRole()))
+                .orElseGet(() -> {
+                    log.warn("Пользователь с именем: {} не найден", login);
+                    return ResponseEntity.notFound().build();
+                });
     }
 
     @Transactional
@@ -60,12 +72,22 @@ public class UserService {
                     if (user.getEmail() != null) {
                         existingUser.setEmail(user.getEmail());
                     }
-                    User savedUser = userRepository.save(existingUser);
-                    return savedUser;
+                    return userRepository.save(existingUser);
                 }).orElseGet(() -> {
                     log.warn("Новость с id: {} не найдена для обновления", id);
                     return null;
                 });
+    }
+    @Transactional
+    public ResponseEntity<Void> updateUserRole(String login, String role) {
+        userRepository.findByLogin(login).map(existingUser -> {
+            existingUser.setRole(role);
+            return ResponseEntity.noContent().build();
+        }).orElseGet(() -> {
+            log.warn("Пользователь с именем : {} не найден для обновления", login);
+            return ResponseEntity.notFound().build();
+        });
+        return ResponseEntity.notFound().build();
     }
 
     @Transactional
