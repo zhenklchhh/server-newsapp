@@ -2,6 +2,8 @@ package com.logic.server_newsapp.controllers;
 
 
 import com.logic.server_newsapp.models.News;
+import com.logic.server_newsapp.services.CommentsService;
+import com.logic.server_newsapp.services.CommunityService;
 import com.logic.server_newsapp.services.NewsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -19,8 +21,14 @@ import java.util.List;
 @RequiredArgsConstructor
 public class NewsController {
 
-    @Autowired
     private NewsService newsService;
+    private CommunityService communityService;
+
+    @Autowired
+    public NewsController(CommunityService communityService, NewsService newsService) {
+        this.communityService = communityService;
+        this.newsService = newsService;
+    }
 
     @GetMapping
     public ResponseEntity<List<News>> getAllNews() {
@@ -36,9 +44,10 @@ public class NewsController {
 
 
     @PostMapping
-    public ResponseEntity<News> createNews(@RequestBody News news) {
+    public ResponseEntity<News> createNews(@RequestBody News news, @RequestBody String communityName) {
         log.info("Получен запрос на создание новой новости: {}", news.getTitle());
         news.setPublishDate(LocalDateTime.now());
+        news.setCommunity(communityService.getCommunityByName(communityName).get());
         return new ResponseEntity<>(newsService.saveNews(news), HttpStatus.CREATED);
     }
 
@@ -52,7 +61,6 @@ public class NewsController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteNews(@PathVariable Long id) {

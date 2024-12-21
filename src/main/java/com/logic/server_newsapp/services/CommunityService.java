@@ -36,6 +36,12 @@ public class CommunityService {
         return communityRepository.findById(id);
     }
 
+    // Get Community by name
+    public Optional<Community> getCommunityByName(String name) {
+        log.info("Fetching community with name: {}", name);
+        return communityRepository.findByNameCommunity(name);
+    }
+
     // Delete Community by ID
     public void deleteCommunityById(Long id) {
         log.info("Deleting community with ID: {}", id);

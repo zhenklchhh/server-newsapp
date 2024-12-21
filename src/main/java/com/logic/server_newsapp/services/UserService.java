@@ -42,6 +42,7 @@ public class UserService {
 
     @Transactional
     public User saveUser(User user) {
+        log.info("Пользователь : {}", user.getLogin() + " зарегистрирован");
         System.out.println(user.getId() + " " + user.getEmail() + " " + user.getLogin() + " " + user.getPassword() + " " + user.getRole());
         return userRepository.save(user);
     }
