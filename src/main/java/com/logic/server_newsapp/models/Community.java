@@ -1,8 +1,10 @@
 package com.logic.server_newsapp.models;
+
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -24,6 +26,9 @@ public class Community {
 
     @OneToMany(mappedBy = "community", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<News> newsList;
+
+    @ManyToMany(mappedBy = "communities")
+    private Set<User> users;
 
     public Community() {}
 

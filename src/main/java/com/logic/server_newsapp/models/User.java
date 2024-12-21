@@ -38,7 +38,7 @@ public class User {
     @Column(name = "role")
     private String role;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ManyToMany(mappedBy = "users")
     private List<Community> communities;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)

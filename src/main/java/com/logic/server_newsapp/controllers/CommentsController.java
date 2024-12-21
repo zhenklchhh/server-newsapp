@@ -16,33 +16,33 @@ import java.util.List;
 public class CommentsController {
     private final CommentsService commentsService;
 
-    // Create or Update Community
+    // Create or Update comments
     @PostMapping
     public ResponseEntity<Comments> saveComment(@RequestBody Comments comments) {
-        log.info("Request to save comment: {}", comments.getUser() + " write on " + comments.getNews());
+        log.info("Запрос на создание комментария: {}, написанным под новость: {}", comments.getUser(), comments.getNews());
         return ResponseEntity.ok(commentsService.saveComment(comments));
     }
 
-    // Get All Communities
+    // Get All comments
     @GetMapping
     public ResponseEntity<List<Comments>> getAllComments() {
-        log.info("Request to fetch all comments");
+        log.info("Запрос на вывод всех комментариев");
         return ResponseEntity.ok(commentsService.getAllComments());
     }
 
-    // Get Community by ID
+    // Get comment by ID
     @GetMapping("/{id}")
     public ResponseEntity<Comments> getCommentById(@PathVariable Long id) {
-        log.info("Request to fetch comment with ID: {}", id);
+        log.info("Запрос вывода комментария по id: {}", id);
         return commentsService.getCommentById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // Delete Community by ID
+    // Delete comment by ID
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCommentById(@PathVariable Long id) {
-        log.info("Request to delete comment with ID: {}", id);
+        log.info("Запрос удаления комментария по ID: {}", id);
         commentsService.deleteCommentById(id);
         return ResponseEntity.noContent().build();
     }

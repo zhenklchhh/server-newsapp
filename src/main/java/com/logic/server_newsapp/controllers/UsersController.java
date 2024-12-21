@@ -1,6 +1,5 @@
 package com.logic.server_newsapp.controllers;
 
-
 import com.logic.server_newsapp.models.User;
 import com.logic.server_newsapp.services.UserService;
 import lombok.extern.log4j.Log4j2;
@@ -10,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @Log4j2
@@ -24,7 +24,7 @@ public class UsersController {
         log.info("Получен запрос на получение всех пользователей");
         return ResponseEntity.ok(userService.getAllUsers());
     }
-    @GetMapping("/role")
+    @GetMapping("/role/{login}")
     public ResponseEntity<String> getUserRoleByLogin(@PathVariable String login) {
         return userService.getUserRoleByLogin(login);
     }
@@ -51,20 +51,20 @@ public class UsersController {
 
     @PutMapping("/updateUserRoleEditor")
     public ResponseEntity<Void> updateUserRoleEditor(@RequestBody String login, @RequestBody String role) {
-        if (role == "ADMIN") {
+        if (Objects.equals(role, "ADMIN")) {
             return userService.updateUserRole(login, "EDITOR");
         } else {
-            log.warn("User haven't permission to update user role");
+            log.warn("У пользователя недостаточно прав");
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
     }
 
     @PutMapping("/updateUserRoleAdmin")
     public ResponseEntity<Void> updateUserRoleAdmin(@RequestBody String login, @RequestBody String role) {
-        if (role == "ADMIN") {
+        if (Objects.equals(role, "ADMIN")) {
             return userService.updateUserRole(login, "ADMIN");
         } else {
-            log.warn("User haven't permission to make user admin");
+            log.warn("Пользователь не является администратором");
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
     }

@@ -20,31 +20,31 @@ public class CommunityService {
 
     // Create or Update Community
     public Community saveCommunity(Community community) {
-        log.info("Saving community: {}", community.getNameCommunity());
+        log.info("Созранение новости: {}", community.getNameCommunity());
         return communityRepository.save(community);
     }
 
     // Get All Communities
     public List<Community> getAllCommunities() {
-        log.info("Fetching all communities");
+        log.info("Получение всех новостей");
         return communityRepository.findAll();
     }
 
     // Get Community by ID
     public Optional<Community> getCommunityById(Long id) {
-        log.info("Fetching community with ID: {}", id);
+        log.info("Получение новости по ID: {}", id);
         return communityRepository.findById(id);
     }
 
     // Get Community by name
     public Optional<Community> getCommunityByName(String name) {
-        log.info("Fetching community with name: {}", name);
+        log.info("Получение новости по name: {}", name);
         return communityRepository.findByNameCommunity(name);
     }
 
     // Delete Community by ID
     public void deleteCommunityById(Long id) {
-        log.info("Deleting community with ID: {}", id);
+        log.info("Удаление новости по ID: {}", id);
         communityRepository.deleteById(id);
     }
 }

@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Log4j2
 @Service
@@ -19,6 +20,10 @@ public class NewsService {
 
     public List<News> getAllNews() {
         return newsRepository.findAll();
+    }
+
+    public List<News> getNewsByName(String name) {
+        return newsRepository.findNewsByTitle(name);
     }
 
     public ResponseEntity<News> getNewsById(long id) {

@@ -41,7 +41,11 @@ public class NewsController {
         log.info("Получен запрос на получение новости с id: {}", id);
         return newsService.getNewsById(id);
     }
-
+    @GetMapping("/{name}")
+    public ResponseEntity<List<News>> getNewsByName(@PathVariable String name) {
+        log.info("Получен запрос на получение новости по названию {}", name);
+        return ResponseEntity.ok(newsService.getNewsByName(name));
+    }
 
     @PostMapping
     public ResponseEntity<News> createNews(@RequestBody News news, @RequestBody String communityName) {

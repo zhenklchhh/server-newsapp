@@ -54,7 +54,7 @@ public class UserService {
 
     @Transactional
     public User saveUser(User user) {
-        log.info("Пользователь : {}", user.getLogin() + " зарегистрирован");
+        log.info("Пользователь : {} зарегистрирован", user.getLogin());
         System.out.println(user.getId() + " " + user.getEmail() + " " + user.getLogin() + " " + user.getPassword() + " " + user.getRole());
         return userRepository.save(user);
     }
@@ -106,5 +106,4 @@ public class UserService {
     public Optional<User> getUserByLoginAndPassword(String login, String password) {
         return userRepository.findByLoginAndPassword(login, password);
     }
-
 }

@@ -20,21 +20,21 @@ public class CommunityController {
     // Create or Update Community
     @PostMapping
     public ResponseEntity<Community> saveCommunity(@RequestBody Community community) {
-        log.info("Request to save community: {}", community.getNameCommunity());
+        log.info("Запрос на создания сообщества: {}", community.getNameCommunity());
         return ResponseEntity.ok(communityService.saveCommunity(community));
     }
 
     // Get All Communities
     @GetMapping
     public ResponseEntity<List<Community>> getAllCommunities() {
-        log.info("Request to fetch all communities");
+        log.info("Запрос на вывод всех сообществ");
         return ResponseEntity.ok(communityService.getAllCommunities());
     }
 
     // Get Community by ID
     @GetMapping("/{id}")
     public ResponseEntity<Community> getCommunityById(@PathVariable Long id) {
-        log.info("Request to fetch community with ID: {}", id);
+        log.info("Запрос на вывод сообществ по id: {}", id);
         return communityService.getCommunityById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -43,7 +43,7 @@ public class CommunityController {
     // Delete Community by ID
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCommunityById(@PathVariable Long id) {
-        log.info("Request to delete community with ID: {}", id);
+        log.info("Запрос удаления сообщества по id: {}", id);
         communityService.deleteCommunityById(id);
         return ResponseEntity.noContent().build();
     }

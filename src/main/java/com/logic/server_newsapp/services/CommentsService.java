@@ -22,25 +22,25 @@ public class CommentsService {
 
     // Create or Update Community
     public Comments saveComment(Comments comment) {
-        log.info("Saving comment: {}", comment.getUser() + " write on " + comment.getNews());
+        log.info("Сохранение комментария: {}", comment.getUser() + " write on " + comment.getNews());
         return commentsRepository.save(comment);
     }
 
     // Get All Communities
     public List<Comments> getAllComments() {
-        log.info("Fetching all comments");
+        log.info("Получение всех комментариев");
         return commentsRepository.findAll();
     }
 
     // Get Community by ID
     public Optional<Comments> getCommentById(Long id) {
-        log.info("Fetching comment with ID: {}", id);
+        log.info("Получение комментария по ID: {}", id);
         return commentsRepository.findById(id);
     }
 
     // Delete Community by ID
     public void deleteCommentById(Long id) {
-        log.info("Deleting comment with ID: {}", id);
+        log.info("Удаление комментария по ID: {}", id);
         commentsRepository.deleteById(id);
     }
 }
