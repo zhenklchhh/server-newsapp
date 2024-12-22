@@ -12,18 +12,34 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.util.Date;
 
+@SuppressWarnings("checkstyle:FinalClass")
 @Component
-public class JWTGenerator {
+public final class JWTGenerator {
+    private JWTGenerator() {
+    }
 
-    public static String signJWT(long userId) throws IOException, JOSEException {
+    /**
+     * Signs a JWT with the given user ID.
+     *
+     * @param userId The ID of the user for whom the JWT is generated.
+     * @return The serialized JWT token.
+     * @throws IOException If an I/O error occurs.
+     * @throws JOSEException If a JOSE error occurs.
+     */
+    public static String signJWT(final long userId)
+            throws IOException, JOSEException {
         byte[] secret = KeyManager.decodeToBytes(SecretKey.SECRET_KEY);
         JWSSigner signer = new MACSigner(secret);
 
         JWTClaimsSet claimsSet = new JWTClaimsSet();
         claimsSet.setSubject(String.valueOf(userId));
         claimsSet.setIssuer("http://localhost:8080");
-        claimsSet.setExpirationTime(new Date(new Date().getTime() + 60 * 60 * 1000));
-        SignedJWT signedJWT = new SignedJWT(new JWSHeader(JWSAlgorithm.HS256), claimsSet);
+        final int seconds = 60;
+        final int thousands = 1000;
+        claimsSet.setExpirationTime(
+                new Date(new Date().getTime() + seconds * seconds * thousands));
+        SignedJWT signedJWT = new SignedJWT(
+                new JWSHeader(JWSAlgorithm.HS256), claimsSet);
 
         signedJWT.sign(signer);
         return signedJWT.serialize();

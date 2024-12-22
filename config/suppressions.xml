@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suppressions PUBLIC
+        "-//Checkstyle//DTD SuppressionFilter Configuration 1.2//EN"
+        "https://checkstyle.org/dtds/suppressions_1_2.dtd">
+<suppressions>
+    <suppress files="ServerNewsappApplication\.java$" checks=".*"/>
+    <!-- <suppress files=".*Test\.java$" checks=".*"/>  Исключение всех файлов с именем `*Test.java` -->
+    <!-- <suppress files=".*generated.*\.java$" checks=".*"/> Исключение всех сгенерированных файлов -->
+    <!-- <suppress files=".*dto.*\.java$" checks=".*"/> Исключение всех dto -->
+</suppressions>
