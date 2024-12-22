@@ -7,6 +7,8 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -93,4 +95,12 @@ public class NewsService {
                     return ResponseEntity.notFound().build();
                 });
     }
+
+    public List<News> getNewsByDate(LocalDateTime date) {
+        LocalDateTime startOfDay = date.withHour(0).withMinute(0).withSecond(0).withNano(0);
+        LocalDateTime endOfDay = date.withHour(23).withMinute(59).withSecond(59).withNano(999_999_999);
+
+        return newsRepository.findByPublishDateBetween(startOfDay, endOfDay);
+    }
+
 }

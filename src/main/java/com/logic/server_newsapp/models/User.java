@@ -46,7 +46,6 @@ public class User {
     )
     private List<Community> communities;
 
-
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comments> comments;
 

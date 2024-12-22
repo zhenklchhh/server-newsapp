@@ -11,7 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -58,10 +60,38 @@ public class NewsController {
                         .collect(Collectors.toList())
         );
     }
+    @PostMapping("/date")
+    public ResponseEntity<List<NewsDTO>> getNewsByDate(@RequestBody Map<String, String> request) {
+        String dateStr = request.get("date");
+        log.info("Получен запрос на получение новостей за дату: {}", dateStr);
+
+        try {
+            LocalDateTime date = LocalDate.parse(dateStr).atStartOfDay();
+            List<News> newsList = newsService.getNewsByDate(date);
+            if (newsList.isEmpty()) {
+                log.info("Новостей за дату '{}' не найдено", dateStr);
+                return ResponseEntity.noContent().build();
+            }
+
+            return ResponseEntity.ok(
+                    newsList.stream()
+                            .map(this::convertToDTO)
+                            .collect(Collectors.toList())
+            );
+        } catch (DateTimeParseException e) {
+            log.error("Ошибка парсинга даты: {}", dateStr, e);
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
 
     @PostMapping
-    public ResponseEntity<NewsDTO> createNews(@RequestBody NewsDTO newsDTO, @RequestParam String communityName) {
-        log.info("Получен запрос на создание новой новости: {}", newsDTO.getTitle());
+    public ResponseEntity<?> createNews(@RequestBody NewsDTO newsDTO, @RequestParam String communityName, @RequestHeader("User-Role") String userRole) {
+        if (!"EDITOR".equalsIgnoreCase(userRole)) {
+            log.warn("Недостаточно прав для создания новости");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Недостаточно прав для создания новости");
+        }
+        log.info("Создание новости пользователем с ролью EDITOR: {}", newsDTO.getTitle());
         News news = newsService.saveNews(convertToEntity(newsDTO, communityName));
         return new ResponseEntity<>(convertToDTO(news), HttpStatus.CREATED);
     }
