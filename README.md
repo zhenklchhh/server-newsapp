@@ -462,7 +462,7 @@ curl -X GET http://localhost:8080/api/news
 
 # Контакты
 
-Если у вас есть вопросы или предложения, свяжитесь с нами по [email@example.com](mailto:email@example.com).
+Если у вас есть вопросы или предложения, свяжитесь с нами по [zaleshchenok.e@mail.ru](mailto:zaleshchenok.e@mail.ru).
 
 ---
 
