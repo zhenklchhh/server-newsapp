@@ -1,6 +1,6 @@
 package com.logic.server_newsapp.controllers;
 
-
+import com.logic.server_newsapp.DTO.NewsDTO;
 import com.logic.server_newsapp.models.News;
 import com.logic.server_newsapp.services.CommunityService;
 import com.logic.server_newsapp.services.NewsService;
@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Log4j2
 @RestController
@@ -30,69 +32,58 @@ public class NewsController {
     }
 
     @GetMapping
-    public ResponseEntity<List<News>> getAllNews() {
+    public ResponseEntity<List<NewsDTO>> getAllNews() {
         log.info("Получен запрос на получение всех новостей");
-        return ResponseEntity.ok(newsService.getAllNews());
+        return ResponseEntity.ok(
+                newsService.getAllNews().stream()
+                        .map(this::convertToDTO)
+                        .collect(Collectors.toList())
+        );
     }
 
-    @GetMapping("/date/new")
-    public ResponseEntity<List<News>> getAllNewsSortedByNew() {
-        log.info("Получен запрос на получение всех новостей");
-        return ResponseEntity.ok(newsService.getAllNewsSortedByNewDate());
-    }
+    @PostMapping("/name")
+    public ResponseEntity<List<NewsDTO>> getNewsByName(@RequestBody Map<String, String> request) {
+        String name = request.get("name");
+        log.info("Получен запрос на получение новостей по названию: {}", name);
 
-    @GetMapping("/date/old")
-    public ResponseEntity<List<News>> getAllNewsSortedByOld() {
-        log.info("Получен запрос на получение всех новостей");
-        return ResponseEntity.ok(newsService.getAllNewsSortedByOldDate());
-    }
+        List<News> newsList = newsService.getNewsByName(name);
+        if (newsList.isEmpty()) {
+            log.info("Новостей с названием '{}' не найдено", name);
+            return ResponseEntity.noContent().build();
+        }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<News> getNewsById(@PathVariable Long id) {
-        log.info("Получен запрос на получение новости с id: {}", id);
-        return newsService.getNewsById(id);
-    }
-
-    @GetMapping("/{name}")
-    public ResponseEntity<List<News>> getNewsByName(@PathVariable String name) {
-        log.info("Получен запрос на получение новости по названию {}", name);
-        return ResponseEntity.ok(newsService.getNewsByName(name));
-    }
-
-    @GetMapping("/date/{name}/new")
-    public ResponseEntity<List<News>> getNewsByNewName(@PathVariable String name) {
-        log.info("Получен запрос на получение всех новостей");
-        return ResponseEntity.ok(newsService.getNewsByNewName(name));
-    }
-
-    @GetMapping("/date/{name}/old")
-    public ResponseEntity<List<News>> getNewsByOldName(@PathVariable String name) {
-        log.info("Получен запрос на получение всех новостей");
-        return ResponseEntity.ok(newsService.getNewsByOldName(name));
+        return ResponseEntity.ok(
+                newsList.stream()
+                        .map(this::convertToDTO)
+                        .collect(Collectors.toList())
+        );
     }
 
     @PostMapping
-    public ResponseEntity<News> createNews(@RequestBody News news, @RequestBody String communityName) {
-        log.info("Получен запрос на создание новой новости: {}", news.getTitle());
+    public ResponseEntity<NewsDTO> createNews(@RequestBody NewsDTO newsDTO, @RequestParam String communityName) {
+        log.info("Получен запрос на создание новой новости: {}", newsDTO.getTitle());
+        News news = newsService.saveNews(convertToEntity(newsDTO, communityName));
+        return new ResponseEntity<>(convertToDTO(news), HttpStatus.CREATED);
+    }
+
+    private NewsDTO convertToDTO(News news) {
+        return new NewsDTO(
+                news.getId(),
+                news.getCommunity().getId(),
+                news.getTitle(),
+                news.getContent(),
+                news.getPublishDate(),
+                news.getSource()
+        );
+    }
+
+    private News convertToEntity(NewsDTO newsDTO, String communityName) {
+        News news = new News();
+        news.setTitle(newsDTO.getTitle());
+        news.setContent(newsDTO.getContent());
         news.setPublishDate(LocalDateTime.now());
+        news.setSource(newsDTO.getSource());
         news.setCommunity(communityService.getCommunityByName(communityName).getBody());
-        return new ResponseEntity<>(newsService.saveNews(news), HttpStatus.CREATED);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<News> updateNews(@PathVariable Long id, @RequestBody News updatedNews) {
-        log.info("Получен запрос на обновление новости с id: {}, новые данные: {}", id, updatedNews);
-        News savedNews = newsService.updateNews(id, updatedNews);
-        if (savedNews != null) {
-            return new ResponseEntity<>(savedNews, HttpStatus.OK);
-        }else{
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteNews(@PathVariable Long id) {
-        log.info("Получен запрос на удаление новости с id: {}", id);
-        return newsService.deleteNews(id);
+        return news;
     }
 }

@@ -5,6 +5,7 @@ import com.logic.server_newsapp.repositories.CommunityRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +17,7 @@ import java.util.Optional;
 @Transactional
 @RequiredArgsConstructor
 public class CommunityService {
-
+    @Autowired
     private final CommunityRepository communityRepository;
 
     // Create or Update Community
@@ -45,7 +46,7 @@ public class CommunityService {
         }).orElseGet(() -> {
             log.warn("Новость с id: {} не найдена для удаления", name);
             return ResponseEntity.notFound().build();
-        });;
+        });
     }
 
     // Delete Community by ID

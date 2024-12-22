@@ -50,8 +50,8 @@ public class UsersController {
     }
 
     @PutMapping("/updateUserRoleEditor")
-    public ResponseEntity<Void> updateUserRoleEditor(@RequestBody String login, @RequestBody String role) {
-        if (Objects.equals(role, "ADMIN")) {
+    public ResponseEntity<Void> updateUserRoleEditor(@RequestBody String login) {
+        if (Objects.equals(Objects.requireNonNull(userService.getUserByLogin(login).getBody()).getRole(), "ADMIN")) {
             return userService.updateUserRole(login, "EDITOR");
         } else {
             log.warn("У пользователя недостаточно прав");

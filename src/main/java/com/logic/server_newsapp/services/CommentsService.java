@@ -1,10 +1,10 @@
 package com.logic.server_newsapp.services;
 
 import com.logic.server_newsapp.models.Comments;
-import com.logic.server_newsapp.models.Community;
 import com.logic.server_newsapp.repositories.CommentsRepository;
 import jakarta.transaction.Transactional;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,8 +14,9 @@ import java.util.Optional;
 @Service
 @Transactional
 public class CommentsService {
-    private final CommentsRepository commentsRepository;
 
+    private final CommentsRepository commentsRepository;
+    @Autowired
     public CommentsService(CommentsRepository commentsRepository) {
         this.commentsRepository = commentsRepository;
     }

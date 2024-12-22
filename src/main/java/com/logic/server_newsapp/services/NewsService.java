@@ -7,10 +7,8 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Log4j2
@@ -38,8 +36,9 @@ public class NewsService {
     }
 
     public List<News> getNewsByName(String name) {
-        return newsRepository.findNewsByTitle(name);
+        return newsRepository.findByTitleContainingIgnoreCase(name);
     }
+
 
     public List<News> getNewsByNewName(String name) {
         return newsRepository.findNewsByTitle(name)

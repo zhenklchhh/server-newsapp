@@ -4,6 +4,7 @@ import com.logic.server_newsapp.models.User;
 import com.logic.server_newsapp.repositories.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +17,7 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
-
+    @Autowired
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }

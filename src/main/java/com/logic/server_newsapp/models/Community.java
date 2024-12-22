@@ -18,7 +18,7 @@ public class Community {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "iduser", nullable = false)
+    @JoinColumn(name = "iduser")
     private User user;
 
     @Column(name = "namecommunity", nullable = false, unique = true)
@@ -27,8 +27,14 @@ public class Community {
     @OneToMany(mappedBy = "community", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<News> newsList;
 
-    @ManyToMany(mappedBy = "communities")
+    @ManyToMany
+    @JoinTable(
+            name = "user_community",
+            joinColumns = @JoinColumn(name = "communityid"),
+            inverseJoinColumns = @JoinColumn(name = "userid")
+    )
     private Set<User> users;
+
 
     public Community() {}
 

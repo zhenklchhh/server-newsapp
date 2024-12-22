@@ -6,6 +6,7 @@ import com.logic.server_newsapp.repositories.CommunityRepository;
 import com.logic.server_newsapp.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,12 @@ public class UserCommunityService {
 
     private final UserRepository userRepository;
     private final CommunityRepository communityRepository;
+
+    @Autowired
+    public UserCommunityService(CommunityRepository communityRepository, UserRepository userRepository) {
+        this.communityRepository = communityRepository;
+        this.userRepository = userRepository;
+    }
 
     public ResponseEntity<String> subscribeUserToCommunity(String login, String nameCommunity) {
         Optional<User> userOptional = userRepository.findByLogin(login);
