@@ -2,9 +2,9 @@ name: Checkstyle
 
 on:
   push:
-    branches: [main]
+    branches: [master]
   pull_request:
-    branches: [main]
+    branches: [master]
 
 jobs:
   checkstyle:
@@ -18,4 +18,4 @@ jobs:
           distribution: 'adopt'
       - name: Run Checkstyle
         run: |
-          ./gradlew checkstyle
+          mvn checkstyle:check
