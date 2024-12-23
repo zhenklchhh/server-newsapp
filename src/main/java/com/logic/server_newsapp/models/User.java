@@ -68,8 +68,14 @@ public class User {
     @Column(name = "role")
     private String role;
 
-    /** List of communities to which the user is subscribed. */
-    @ManyToMany(mappedBy = "users")
+
+      /** List of communities to which the user is subscribed. */
+    @ManyToMany
+    @JoinTable(
+            name = "user_community",
+            joinColumns = @JoinColumn(name = "userid"),
+            inverseJoinColumns = @JoinColumn(name = "communityid")
+    )
     private List<Community> communities;
 
     /** List of comments made by this user. */

@@ -98,9 +98,8 @@ public class UsersController {
      * if user is not authorized to update the role.
      */
     @PutMapping("/updateUserRoleEditor")
-    public ResponseEntity<Void> updateUserRoleEditor(
-            @RequestBody final String login, @RequestBody final String role) {
-        if (Objects.equals(role, "ADMIN")) {
+    public ResponseEntity<Void> updateUserRoleEditor(@RequestBody String login) {
+        if (Objects.equals(Objects.requireNonNull(userService.getUserByLogin(login).getBody()).getRole(), "ADMIN")) {
             return userService.updateUserRole(login, "EDITOR");
         } else {
             log.warn("У пользователя недостаточно прав");

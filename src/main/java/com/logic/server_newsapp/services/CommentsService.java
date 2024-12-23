@@ -3,6 +3,9 @@ package com.logic.server_newsapp.services;
 import com.logic.server_newsapp.models.Comments;
 import com.logic.server_newsapp.repositories.CommentsRepository;
 import jakarta.transaction.Transactional;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import lombok.extern.log4j.Log4j2;
@@ -16,18 +19,12 @@ import org.springframework.stereotype.Service;
 @Transactional
 public class CommentsService {
 
-    /**
-     * The repository for accessing comments data.
-     */
-    private final CommentsRepository commentRepository;
-
-    /**
-     * Constructor for CommentsService.
-     *
-     * @param commentRepositoryParam  The repository for comments data.
-     */
-    public CommentsService(final CommentsRepository commentRepositoryParam) {
-        this.commentRepository = commentRepositoryParam;
+  
+    private final CommentsRepository commentsRepository;
+    
+  @Autowired
+    public CommentsService(CommentsRepository commentsRepository) {
+        this.commentsRepository = commentsRepository;
     }
 
     /**

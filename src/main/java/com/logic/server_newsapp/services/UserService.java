@@ -6,6 +6,7 @@ import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,7 @@ public class UserService {
      *
      * @param userRepositoryParam The repository for user data.
      */
+    @Autowired
     public UserService(final UserRepository userRepositoryParam) {
         this.userRepository = userRepositoryParam;
     }

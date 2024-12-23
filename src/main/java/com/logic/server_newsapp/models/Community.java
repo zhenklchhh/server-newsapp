@@ -31,7 +31,7 @@ public class Community {
 
     /** The user who created the community. */
     @ManyToOne
-    @JoinColumn(name = "iduser", nullable = false)
+    @JoinColumn(name = "iduser")
     private User user;
 
     /** The name of the community. This should be unique. */
@@ -43,21 +43,27 @@ public class Community {
             cascade = CascadeType.ALL, orphanRemoval = true)
     private List<News> newsList;
 
-    /** A set of users that are subscribed to this community. */
-    @ManyToMany(mappedBy = "communities")
+  /** A set of users that are subscribed to this community. */
+    @ManyToMany
+    @JoinTable(
+            name = "user_community",
+            joinColumns = @JoinColumn(name = "communityid"),
+            inverseJoinColumns = @JoinColumn(name = "userid")
+    )
     private Set<User> users;
 
-    /** Default constructor for JPA. */
-    public Community() { }
 
-    /**
+    /** Default constructor for JPA. */
+    public Community() {}
+
+      /**
      * Constructor for creating a new community.
      *
      * @param userParam The user who creates the community.
      * @param nameCommunityParam The name of the community.
      */
-    public Community(final User userParam, final String nameCommunityParam) {
-        this.user = userParam;
-        this.nameCommunity = nameCommunityParam;
+    public Community(User user, String nameCommunity) {
+        this.user = user;
+        this.nameCommunity = nameCommunity;
     }
 }

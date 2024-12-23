@@ -9,6 +9,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +25,13 @@ public class UserCommunityService {
     /** Repository for accessing community data. */
     private final CommunityRepository communityRepository;
 
-    /**
+    @Autowired
+    public UserCommunityService(CommunityRepository communityRepository, UserRepository userRepository) {
+        this.communityRepository = communityRepository;
+        this.userRepository = userRepository;
+    }
+
+     /**
      * Subscribes a user to a community. If the community does not exist,
      * it will be created if the
      * user has the appropriate role.
@@ -33,8 +40,7 @@ public class UserCommunityService {
      * @param nameCommunity The name of the community to subscribe to.
      * @return A ResponseEntity with a success or failure message.
      */
-    public ResponseEntity<String> subscribeUserToCommunity(
-            final String login, final String nameCommunity) {
+    public ResponseEntity<String> subscribeUserToCommunity(String login, String nameCommunity) {
         Optional<User> userOptional = userRepository.findByLogin(login);
         if (userOptional.isEmpty()) {
             log.warn("User with login {} not found", login);

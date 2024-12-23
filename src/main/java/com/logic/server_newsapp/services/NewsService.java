@@ -10,6 +10,10 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import java.time.LocalDateTime;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Service class for managing news.
@@ -59,29 +63,15 @@ public class NewsService {
                 .collect(Collectors.toList());
     }
 
-    /**
-     * Retrieves news by title.
-     *
-     * @param name The title of the news to retrieve.
-     * @return A list of news with the specified title.
-     */
-    public List<News> getNewsByName(final String name) {
-        return newsRepository.findNewsByTitle(name);
+    public List<News> getNewsByName(String name) {
+        return newsRepository.findByTitleContainingIgnoreCase(name);
     }
 
-    /**
-     * Retrieves news by title sorted by publish
-     * date in descending order (newest first).
-     *
-     * @param name The title of the news to retrieve.
-     * @return A list of news with the specified title,
-     * sorted by publish date (newest first).
-     */
-    public List<News> getNewsByNewName(final String name) {
-        return newsRepository.findNewsByTitle(name).stream()
-                .sorted((news1, news2) ->
-                        news2.getPublishDate().compareTo(
-                                news1.getPublishDate()))
+
+    public List<News> getNewsByNewName(String name) {
+        return newsRepository.findNewsByTitle(name)
+                .stream()
+                .sorted((news1, news2) -> news2.getPublishDate().compareTo(news1.getPublishDate()))
                 .collect(Collectors.toList());
     }
 
@@ -174,4 +164,12 @@ public class NewsService {
                             return ResponseEntity.notFound().build();
                         });
     }
+
+    public List<News> getNewsByDate(LocalDateTime date) {
+        LocalDateTime startOfDay = date.withHour(0).withMinute(0).withSecond(0).withNano(0);
+        LocalDateTime endOfDay = date.withHour(23).withMinute(59).withSecond(59).withNano(999_999_999);
+
+        return newsRepository.findByPublishDateBetween(startOfDay, endOfDay);
+    }
+
 }
