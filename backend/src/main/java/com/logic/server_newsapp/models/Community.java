@@ -1,16 +1,7 @@
 package com.logic.server_newsapp.models;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
 import java.util.List;
 import java.util.Set;
 import lombok.Getter;
@@ -59,8 +50,8 @@ public class Community {
       /**
      * Constructor for creating a new community.
      *
-     * @param userParam The user who creates the community.
-     * @param nameCommunityParam The name of the community.
+     * @param nameCommunity The user who creates the community.
+     * @param user The name of the community.
      */
     public Community(User user, String nameCommunity) {
         this.user = user;

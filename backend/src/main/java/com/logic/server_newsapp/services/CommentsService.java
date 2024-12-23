@@ -22,7 +22,7 @@ public class CommentsService {
   
     private final CommentsRepository commentsRepository;
     
-  @Autowired
+    @Autowired
     public CommentsService(CommentsRepository commentsRepository) {
         this.commentsRepository = commentsRepository;
     }
@@ -37,7 +37,7 @@ public class CommentsService {
         log.info(
                 "Saving comment: {} wrote on {}",
                 comment.getUser(), comment.getNews());
-        return commentRepository.save(comment);
+        return commentsRepository.save(comment);
     }
 
     /**
@@ -47,7 +47,7 @@ public class CommentsService {
      */
     public List<Comments> getAllComments() {
         log.info("Retrieving all comments");
-        return commentRepository.findAll();
+        return commentsRepository.findAll();
     }
 
     /**
@@ -59,7 +59,7 @@ public class CommentsService {
      */
     public Optional<Comments> getCommentById(final Long id) {
         log.info("Retrieving comment by ID: {}", id);
-        return commentRepository.findById(id);
+        return commentsRepository.findById(id);
     }
 
     /**
@@ -69,6 +69,6 @@ public class CommentsService {
      */
     public void deleteCommentById(final Long id) {
         log.info("Deleting comment by ID: {}", id);
-        commentRepository.deleteById(id);
+        commentsRepository.deleteById(id);
     }
 }

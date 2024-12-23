@@ -1,12 +1,9 @@
 package com.logic.server_newsapp.controllers;
 
 import com.logic.server_newsapp.DTO.NewsDTO;
-import com.logic.server_newsapp.models.Community;
 import com.logic.server_newsapp.models.News;
 import com.logic.server_newsapp.services.CommunityService;
 import com.logic.server_newsapp.services.NewsService;
-import java.time.LocalDateTime;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,16 +17,6 @@ import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
 
 /** REST controller for managing news. */
 @Log4j2
@@ -195,7 +182,7 @@ public class NewsController {
     /**
      * Creates a new news entry.
      *
-     * @param news The news object to create.
+     * @param newsDTO The news object to create.
      * @param communityName The name of the community the news belongs to.
      * @return The created news entry with a 201 CREATED status.
      */
