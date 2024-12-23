@@ -10,6 +10,12 @@ import java.util.List;
 
 @Repository
 public interface NewsRepository extends JpaRepository<News, Long> {
+    /**
+     * Finds news items by their title.
+     *
+     * @param name The title of the news items to find.
+     * @return A list of news items with the given title.
+     */
     List<News> findNewsByTitle(String name);
     List<News> findByTitleContainingIgnoreCase(String name);
 

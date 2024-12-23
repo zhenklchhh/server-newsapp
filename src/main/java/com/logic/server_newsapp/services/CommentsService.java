@@ -6,42 +6,69 @@ import jakarta.transaction.Transactional;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.stereotype.Service;
 
+/**
+ * Service class for managing comments.
+ */
 @Log4j2
 @Service
 @Transactional
 public class CommentsService {
 
+  
     private final CommentsRepository commentsRepository;
-    @Autowired
+    
+  @Autowired
     public CommentsService(CommentsRepository commentsRepository) {
         this.commentsRepository = commentsRepository;
     }
 
-    // Create or Update Community
-    public Comments saveComment(Comments comment) {
-        log.info("Сохранение комментария: {}", comment.getUser() + " write on " + comment.getNews());
-        return commentsRepository.save(comment);
+    /**
+     * Saves a comment or updates it if it already exists.
+     *
+     * @param comment The comment to be saved or updated.
+     * @return The saved or updated comment.
+     */
+    public Comments saveComment(final Comments comment) {
+        log.info(
+                "Saving comment: {} wrote on {}",
+                comment.getUser(), comment.getNews());
+        return commentRepository.save(comment);
     }
 
-    // Get All Communities
+    /**
+     * Retrieves all comments.
+     *
+     * @return A list of all comments.
+     */
     public List<Comments> getAllComments() {
-        log.info("Получение всех комментариев");
-        return commentsRepository.findAll();
+        log.info("Retrieving all comments");
+        return commentRepository.findAll();
     }
 
-    // Get Community by ID
-    public Optional<Comments> getCommentById(Long id) {
-        log.info("Получение комментария по ID: {}", id);
-        return commentsRepository.findById(id);
+    /**
+     * Retrieves a comment by its ID.
+     *
+     * @param id The ID of the comment to retrieve.
+     * @return An Optional containing the comment if found,
+     * or an empty Optional if not.
+     */
+    public Optional<Comments> getCommentById(final Long id) {
+        log.info("Retrieving comment by ID: {}", id);
+        return commentRepository.findById(id);
     }
 
-    // Delete Community by ID
-    public void deleteCommentById(Long id) {
-        log.info("Удаление комментария по ID: {}", id);
-        commentsRepository.deleteById(id);
+    /**
+     * Deletes a comment by its ID.
+     *
+     * @param id The ID of the comment to delete.
+     */
+    public void deleteCommentById(final Long id) {
+        log.info("Deleting comment by ID: {}", id);
+        commentRepository.deleteById(id);
     }
 }

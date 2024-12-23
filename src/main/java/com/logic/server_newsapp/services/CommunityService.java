@@ -3,55 +3,87 @@ package com.logic.server_newsapp.services;
 import com.logic.server_newsapp.models.Community;
 import com.logic.server_newsapp.repositories.CommunityRepository;
 import jakarta.transaction.Transactional;
+import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
-
+/**
+ * Service class for managing communities.
+ */
 @Log4j2
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class CommunityService {
+
+    /**
+     * The repository for accessing community data.
+     */
     @Autowired
     private final CommunityRepository communityRepository;
 
-    // Create or Update Community
-    public Community saveCommunity(Community community) {
-        log.info("Созранение новости: {}", community.getNameCommunity());
+    /**
+     * Saves a community or updates it if it already exists.
+     *
+     * @param community The community to be saved or updated.
+     * @return The saved or updated community.
+     */
+    public Community saveCommunity(final Community community) {
+        log.info("Saving community: {}", community.getNameCommunity());
         return communityRepository.save(community);
     }
 
-    // Get All Communities
+    /**
+     * Retrieves all communities.
+     *
+     * @return A list of all communities.
+     */
     public List<Community> getAllCommunities() {
-        log.info("Получение всех новостей");
+        log.info("Retrieving all communities");
         return communityRepository.findAll();
     }
 
-    // Get Community by ID
-    public Optional<Community> getCommunityById(Long id) {
-        log.info("Получение новости по ID: {}", id);
+    /**
+     * Retrieves a community by its ID.
+     *
+     * @param id The ID of the community to retrieve.
+     * @return An Optional containing the community
+     * if found, or an empty Optional if not.
+     */
+    public Optional<Community> getCommunityById(final Long id) {
+        log.info("Retrieving community by ID: {}", id);
         return communityRepository.findById(id);
     }
 
-    // Get Community by name
-    public ResponseEntity<Community> getCommunityByName(String name) {
-        log.info("Получение новости по name: {}", name);
+    /**
+     * Retrieves a community by its name.
+     *
+     * @param name The name of the community to retrieve.
+     * @return A ResponseEntity containing the community if found,
+     * or a 404 Not Found response if
+     *     not.
+     */
+    public ResponseEntity<Community> getCommunityByName(final String name) {
+        log.info("Retrieving community by name: {}", name);
         return communityRepository.findByNameCommunity(name).map(community -> {
             return ResponseEntity.ok(community);
         }).orElseGet(() -> {
-            log.warn("Новость с id: {} не найдена для удаления", name);
+            log.warn("Community with name: {} not found", name);
             return ResponseEntity.notFound().build();
         });
     }
 
-    // Delete Community by ID
-    public void deleteCommunityById(Long id) {
-        log.info("Удаление новости по ID: {}", id);
+    /**
+     * Deletes a community by its ID.
+     *
+     * @param id The ID of the community to delete.
+     */
+    public void deleteCommunityById(final Long id) {
+        log.info("Deleting community by ID: {}", id);
         communityRepository.deleteById(id);
     }
 }
